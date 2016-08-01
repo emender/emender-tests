@@ -1,0 +1,1 @@
+link:http://asciidoctor.org[This is a working link from an included file]

@@ -1,0 +1,9 @@
+= This is the main adoc file
+
+* link:http://asciidoctor.org[This is a working link]
+* link:http://asciidoctor123.org[This is not a working link]
+* link:http://skip-this-site.com[This will be skipped]
+* include::topics/topic1.adoc[]
+* include::topics/topic2.adoc[]
+* http://daringfireball.net/projects/markdown/[Passing mardown-style link]
+* http://daringfireball123.net/projects/markdown/[Failing mardown-style link]
