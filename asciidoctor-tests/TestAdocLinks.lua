@@ -17,14 +17,16 @@ TestAdocLinks = {
 	metadata = {
 		description = "Verify that all external links in adoc files are functional",
 		authors = "Zach Rhoads",
-		changed = "2016-07-15",
+		changed = "2017-03-03",
 		tags = {"AsciiDoc"}
 	},
 	requires = {"curl"},
 	asciiObj = nil,
 	main_file = nil,
   files = {},
-  links = {}
+  links = {},
+  skipLinks = { },
+  violations = { }
 }
 
 
@@ -49,22 +51,12 @@ function TestAdocLinks.findLinks()
   pattern = "link:https?://[%a%d%./_=%?%-#]*%["
   mdPattern =    "https?://[%a%d%./_=%?%-#]*%["
   
-  skipLinks = {
-    ["http://skip-this-site.com"] = true,
-    ["http://example.com"] = true,
-    ["http://example.net"] = true,
-    ["http://example.org"] = true,
-    ["http://example.edu"] = true,
-    ["localhost"] = true,
-    ["127.0.0.1"] = true,
-  }
-  
   for filename,content in pairs(TestAdocLinks.files) do
     for lineNum,lineContent in pairs(content) do
       for w in string.gmatch(lineContent, pattern) do
         -- strip out leading "link:" and trailing "["
         url = string.sub(w, 6, -2)
-        if not skipLinks[url] then
+        if not TestAdocLinks.skipLinks[url] then
           TestAdocLinks.links[filename..":"..lineNum] = url
         end
       end
@@ -72,7 +64,7 @@ function TestAdocLinks.findLinks()
       for w in string.gmatch(lineContent, mdPattern) do
         -- strip out trainling "["
         url = string.sub(w, 0, -2)
-        if not skipLinks[url] then
+        if not TestAdocLinks.skipLinks[url] then
           TestAdocLinks.links[filename..":"..lineNum] = url
         end
       end      
@@ -83,6 +75,16 @@ end
 
 function TestAdocLinks.setUp()
   dofile(getScriptDirectory() .. "lib/asciidoc.lua")
+  
+  -- load skip links
+  for line in io.lines("../asciidoctor-tests/skip-links.txt") do
+    TestAdocLinks.skipLinks[line] = line
+  end
+  
+  -- load style failures
+  for line in io.lines("../asciidoctor-tests/violations.txt") do
+    TestAdocLinks.violations[line] = line
+  end
   
 	TestAdocLinks.asciiObj = asciidoc.create(TestAdocLinks.main_file)
 
@@ -125,4 +127,23 @@ function TestAdocLinks.testLinks()
   end
 end
 
+-- This test will check for style violations
+function TestAdocLinks.testStyle()
+
+  if table.isEmpty(TestAdocLinks.files) then
+      warn("No content found.")
+      return
+  end
+
+  for filename,content in pairs(TestAdocLinks.files) do
+    for lineNum,lineContent in pairs(content) do
+      for number,violation in pairs(TestAdocLinks.violations) do
+        if string.match(lineContent, violation) then
+          fail("Violation: " .. violation .. " found at " .. filename .. ":" .. lineNum)
+        end
+      end
+    end
+    
+  end
+end
 

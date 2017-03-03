@@ -3,7 +3,27 @@
 * link:http://asciidoctor.org[This is a working link]
 * link:http://asciidoctor123.org[This is not a working link]
 * link:http://skip-this-site.com[This will be skipped]
+* link:http://example.com[This will be skipped too!]
 * include::topics/topic1.adoc[]
 * include::topics/topic2.adoc[]
 * http://daringfireball.net/projects/markdown/[Passing mardown-style link]
 * http://daringfireball123.net/projects/markdown/[Failing mardown-style link]
+
+
+I want to provide some sample info for bad style and/or bad asciidoc. This will fail tests run via emender for using terms included in `violations.txt`.
+
+Please keep in mind that you'll need to escape certain special characters in terms such as e.g. , i.e. , etc.
+
+You can also call out asciidoc syntax mistakes that don't fail the parser, for example the below source blocks have typos in the options parameter:
+
+[source,options="no-wrap"]
+----
+$ ./runAllTests.sh
+----
+
+or 
+
+[source,option="nowrap"]
+----
+$ ./runAllTests.sh
+----

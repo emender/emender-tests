@@ -1,0 +1,8 @@
+options="no%-wrap"
+option="nowrap"
+i%.e%. 
+e%.g%. 
+via 
+etc%.
+info 
+and/or
