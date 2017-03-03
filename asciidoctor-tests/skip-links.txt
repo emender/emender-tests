@@ -1,0 +1,8 @@
+http://skip-this-site.com
+http://example.com
+https://example.com
+http://example.net
+http://example.org
+http://example.edu
+localhost
+127.0.0.1
